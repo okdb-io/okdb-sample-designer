@@ -7,21 +7,17 @@ import { Alert as MuiAlert } from '@material-ui/lab';
 
 import OkdbClient from "okdb-client";
 import cloneDeep from 'lodash/cloneDeep';
-import Designer, { Circle, Path} from "react-designer";
+import Designer from "react-designer";
 import initialObjects from "./initialObjects";
 import MousePointer from './MousePointer';
 
-console.log("Initial objects:", initialObjects);
-console.log("Designer ", Circle, Path);
-console.log("okdb client: ", OkdbClient);
-
 const HOST = "http://localhost:7899"; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
 const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
-const okdb = new OkdbClient(HOST, { timeout:5000 });
-console.log("Initialized okdb instance: ", okdb);
+const okdb = new OkdbClient(HOST, { timeout:30000 });
+
 window.okdb = okdb;
 const DATA_TYPE="todo-tasks"; // data type, typically corresponds to the table name
-const DOCUMENT_ID = "design-doc3"; // id of the object to be edited collaboratively
+const DOCUMENT_ID = "design-doc1"; // id of the object to be edited collaboratively
 
 
 const Alert = (props)  => {
@@ -35,7 +31,6 @@ function App() {
   const [localObjects, setLocalObjects] = useState([]);
 
   const presenceCallback = (id, data) => { // callback to recieve status changes of other collaborators
-    console.log("Presence: id=", id, " payload=" + JSON.stringify(data));
     if(!data) {
       setPresences(prev => {        
         const newState = cloneDeep(prev);
@@ -55,7 +50,7 @@ function App() {
   };
 
   const updateCallback = (data, meta) => { // callback to receive changes from others
-    console.log("updateCallback: ", data, JSON.stringify(meta));    
+    //console.log("updateCallback: ", data, JSON.stringify(meta));    
     const newDoc = cloneDeep(data);      
     setDoc(newDoc);
     setLocalObjects(newDoc.objects);
@@ -107,7 +102,7 @@ function App() {
       const containerRect = container.getBoundingClientRect();  
       var left = e.clientX - containerRect.left;
       var top = e.clientY - containerRect.top;
-      console.log("move move " + left + "," + top);
+      
       okdb.sendPresence({
         type: "cursor",
         target: "canvas",
