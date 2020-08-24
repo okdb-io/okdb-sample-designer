@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-
-
 import { Container, Paper, Grid} from '@material-ui/core';
 import { Alert as MuiAlert } from '@material-ui/lab';
-
 import OkdbClient from "okdb-client";
 import cloneDeep from 'lodash/cloneDeep';
 import Designer from "react-designer";
 import initialObjects from "./initialObjects";
-import MousePointer from './MousePointer';
+import AppUsers from './AppUsers';
 
 const HOST = "http://localhost:7899"; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
 const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
@@ -25,6 +22,7 @@ const Alert = (props)  => {
 };
 
 function App() {
+  const [user, setUser] = useState(null);
   const [doc, setDoc] = useState(null); 
   const [presences, setPresences] = useState({});
   const [error, setError] = useState(null);
@@ -62,15 +60,17 @@ function App() {
     okdb.connect(TOKEN)
       .then(user => {
         console.log("[okdb] connected as ", user);
+        setUser(user);
         // 2. step - open document for collaborative editing
-        const defaultValue = { objects: initialObjects };       
-        
+        const defaultValue = { objects: initialObjects };               
 
         okdb.open(DATA_TYPE, // collection name
           DOCUMENT_ID,
           defaultValue, // default value to save if doesn't exist yet
-          updateCallback, 
-          presenceCallback)
+          {
+            onChange: updateCallback,
+            onPresence: presenceCallback
+          })
           .then(data => { // get data of opened doc
             console.log("Loaded doc from server ", data)
             setDoc(data);
@@ -139,37 +139,9 @@ function App() {
             <h4>Online:</h4>
             <div className="online-item" key="000">
               <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small"><circle cx="5" cy="5" r="5"></circle></svg>
-              me
+              me ({user ? user.name : "connecting..."})
             </div>
-            {Object.keys(presences).map((presenceId, index) => {              
-              const presence = presences[presenceId];              
-              let left = 0;
-              let top = 0;
-              if(presence.left != null) {
-                const container = document.querySelector("#canvas-container");   
-                if(container) {
-                  const containerRect = container.getBoundingClientRect();                
-                  top = containerRect.top + presence.top + "px";
-                  left = containerRect.left + presence.left + "px";
-                }                
-              }
-              const colors = [ "#5551FF", "#0FA958"];
-              const userColor = colors[index%colors.length];
-              return (
-              <div className="online-item" key={presenceId}>
-                <svg width="10" fill={userColor} focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small"><circle cx="5" cy="5" r="5"></circle></svg>
-                {presence.user.name}
-                { presence.left != null &&
-                  <div id="cursor" className="cursor-block" style={{left, top}}>
-                    <MousePointer color={userColor} />
-                    <div className="cursor-name-container">
-                      <div className="cursor-name" style={{backgroundColor: userColor}}>{presence.user.name}</div>
-                    </div>
-                  </div>
-                }
-              </div>              
-              );
-            })}
+            <AppUsers presences={presences} />
           </div>
         </Grid>
       </Grid>
