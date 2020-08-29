@@ -13,8 +13,8 @@ const TOKEN = "12345"; // either get it from your auth provider and validate wit
 const okdb = new OkdbClient(SERVER, { timeout:30000 });
 
 window.okdb = okdb;
-const DATA_TYPE="todo-tasks"; // data type, typically corresponds to the table name
-const DOCUMENT_ID = "design-doc1"; // id of the object to be edited collaboratively
+const DATA_TYPE="designer"; // data type, typically corresponds to the table name
+const DOCUMENT_ID = "doc1"; // id of the object to be edited collaboratively
 
 
 const Alert = (props)  => {
