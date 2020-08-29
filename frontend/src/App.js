@@ -11,9 +11,9 @@ import Designer from "react-designer";
 import initialObjects from "./initialObjects";
 import MousePointer from './MousePointer';
 
-const HOST = "http://localhost:7899"; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
+const SERVER = "https://okdb.herokuapp.com"; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
 const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
-const okdb = new OkdbClient(HOST, { timeout:30000 });
+const okdb = new OkdbClient(SERVER, { timeout:30000 });
 
 window.okdb = okdb;
 const DATA_TYPE="todo-tasks"; // data type, typically corresponds to the table name
@@ -139,7 +139,7 @@ function App() {
             <h4>Online:</h4>
             <div className="online-item" key="000">
               <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small"><circle cx="5" cy="5" r="5"></circle></svg>
-              me
+              me ({user ? user.name : "connecting..."})
             </div>
             {Object.keys(presences).map((presenceId, index) => {              
               const presence = presences[presenceId];              
