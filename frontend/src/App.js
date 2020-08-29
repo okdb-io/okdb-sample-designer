@@ -4,7 +4,7 @@ import { Container, Paper, Grid} from '@material-ui/core';
 import { Alert as MuiAlert } from '@material-ui/lab';
 import OkdbClient from "okdb-client";
 import cloneDeep from 'lodash/cloneDeep';
-import Designer from "react-designer";
+import Designer from "okdb-react-designer";
 import initialObjects from "./initialObjects";
 import AppUsers from './AppUsers';
 
