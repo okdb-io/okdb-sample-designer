@@ -10,7 +10,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "lodash": "^4.17.19",
-    "okdb-client": "^1.2.2",
+    "okdb-client": "^1.2.3",
     "okdb-react-designer": "1.1.3",
     "react": "^16.13.1",
     "react-dom": "16.13.1",
@@ -21,7 +21,7 @@
     "uuid": "^8.0.0"
   },
   "scripts": {
-    "start": "PORT=3006 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
